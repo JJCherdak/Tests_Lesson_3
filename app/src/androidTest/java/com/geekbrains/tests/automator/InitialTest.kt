@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
-import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.uiautomator.UiDevice
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,7 +19,7 @@ class InitialTest {
 
     @Test
     fun test_DeviceNotNull() {
-        val uiDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val uiDevice: UiDevice = UiDevice.getInstance(getInstrumentation())
         Assert.assertNotNull(uiDevice)
     }
 

@@ -8,7 +8,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
-import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
@@ -23,7 +23,7 @@ import org.junit.runner.RunWith
 @SdkSuppress(minSdkVersion = 18)
 class BehaviorTest {
 
-    private val uiDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    private val uiDevice: UiDevice = UiDevice.getInstance(getInstrumentation())
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val packageName = context.packageName
 
