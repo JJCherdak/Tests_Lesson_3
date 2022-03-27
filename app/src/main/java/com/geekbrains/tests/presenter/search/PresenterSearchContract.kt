@@ -5,7 +5,4 @@ import com.geekbrains.tests.view.search.ViewSearchContract
 
 internal interface PresenterSearchContract : PresenterContract {
     fun searchGitHub(searchQuery: String)
-    fun onAttach(view : ViewSearchContract)
-    fun onDetach()
-    fun isPresenterAttached() : Boolean
 }
