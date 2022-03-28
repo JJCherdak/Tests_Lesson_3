@@ -3,17 +3,13 @@ package com.geekbrains.tests.automator
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
-import com.geekbrains.tests.R
+import junit.framework.Assert.assertNotNull
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -39,15 +35,16 @@ class BehaviorTest {
     @Test
     fun test_MainActivityIsStarted() {
         val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
-        Assert.assertNotNull(editText)
+        assertNotNull(editText)
     }
 
     @Test
     fun test_SearchIsPositive() {
         val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
         editText.text = "UiAutomator"
-        Espresso.onView(ViewMatchers.withId(R.id.searchEditText))
-            .perform(ViewActions.pressImeActionButton())
+
+        val search = uiDevice.findObject(By.res(packageName, "toSearchButton"))
+        search.click()
 
         val changedText =
             uiDevice.wait(
@@ -59,7 +56,7 @@ class BehaviorTest {
 
     @Test
     fun test_OpenDetailsScreen() {
-        val toDetails: UiObject2 = uiDevice.findObject(
+        val toDetails = uiDevice.findObject(
             By.res(
                 packageName,
                 "toDetailsActivityButton"

@@ -28,7 +28,7 @@ class MainActivityEspressoTest {
 
     @Test
     fun activitySearch_IsWorking() {
-        Espresso.onView(ViewMatchers.withId(R.id.searchEditText)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.toSearchButton)).perform(ViewActions.click())
         Espresso.onView(ViewMatchers.withId(R.id.searchEditText))
             .perform(ViewActions.replaceText("algol"), ViewActions.closeSoftKeyboard())
         Espresso.onView(ViewMatchers.withId(R.id.searchEditText))
