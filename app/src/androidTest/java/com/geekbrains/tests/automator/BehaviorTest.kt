@@ -9,6 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
+import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import org.junit.Assert
 import org.junit.Before
@@ -63,13 +64,49 @@ class BehaviorTest {
             )
         )
         toDetails.click()
+    }
+
+    @Test
+    fun test_IncrementButton() {
+        val toDetails = uiDevice.findObject(By.res(packageName, "toDetailsActivityButton"))
+        toDetails.click()
+        val changedText = uiDevice.wait(
+            Until.findObject(By.res(packageName, "totalCountTextView")),
+            TIMEOUT
+        )
+        val toIncrement = uiDevice.findObject(By.res(packageName, "incrementButton"))
+        toIncrement.click()
+        assertEquals(changedText.text, "Number of results: 1")
+    }
+
+    @Test
+    fun test_DecrementButton() {
+        val toDetails = uiDevice.findObject(By.res(packageName, "toDetailsActivityButton"))
+        toDetails.click()
+        val changedText = uiDevice.wait(
+            Until.findObject(By.res(packageName, "totalCountTextViewDetails")),
+            TIMEOUT
+        )
+        val toIncrement = uiDevice.findObject(By.res(packageName, "decrementButton"))
+        toIncrement.click()
+        assertEquals(changedText.text, "Number of results: -1")
+    }
+
+    @Test
+    fun test_ReturnResultTrue(){
+        val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
+        editText.text = "written"
+        val toSearch = uiDevice.findObject(By.res(packageName, "toSearchButton"))
+        toSearch.click()
+
+
 
         val changedText =
             uiDevice.wait(
                 Until.findObject(By.res(packageName, "totalCountTextView")),
                 TIMEOUT
             )
-        Assert.assertEquals(changedText.text, "Number of results: 0")
+        Assert.assertEquals(changedText.text, "Number of results: 42")
     }
 
     companion object {
