@@ -102,4 +102,6 @@ dependencies {
 
     //UI Automator
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+
+    debugImplementation 'androidx.fragment:fragment-testing:1.4.1'
 }
