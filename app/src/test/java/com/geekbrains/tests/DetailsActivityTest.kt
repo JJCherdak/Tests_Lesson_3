@@ -17,6 +17,13 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import org.junit.Rule
+import androidx.test.rule.ActivityTestRule
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.action.ViewActions.click
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
@@ -24,6 +31,12 @@ class DetailsActivityTest {
 
     private lateinit var scenario: ActivityScenario<DetailsActivity>
     private lateinit var context: Context
+
+    @Rule
+    @JvmField
+    var activityRule = ActivityTestRule<DetailsActivity>(
+        DetailsActivity::class.java
+    )
 
     @Before
     fun setup() {
@@ -119,6 +132,17 @@ class DetailsActivityTest {
         val intent = DetailsActivity.getIntent(context, count)
         val bundle = intent.extras
         assertEquals(count, bundle?.getInt(DetailsActivity.TOTAL_COUNT_EXTRA, 0))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun activityToDetailsActivityButton() {
+        onView(withId(R.id.toDetailsActivityButton))
+    }
+
+    @Test
+    fun clickActivityToDetailsActivityButton() {
+        onView(withId(R.id.toDetailsActivityButton)).perform(click())
     }
 
     @After
