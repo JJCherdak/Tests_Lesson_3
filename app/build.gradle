@@ -106,5 +106,10 @@ dependencies {
     debugImplementation 'androidx.fragment:fragment-testing:1.4.1'
 
     debugImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
+
+    // rx
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
 }
 
