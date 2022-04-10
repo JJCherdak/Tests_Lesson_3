@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.robolectric.annotation.Config
 
@@ -27,6 +28,9 @@ class SearchViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
+    @get:Rule
+    var testCoroutineRule = TestCoroutineRule()
+
     private lateinit var searchViewModel: SearchViewModel
 
     @Mock
@@ -35,22 +39,28 @@ class SearchViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        searchViewModel = SearchViewModel(repository, SchedulerProviderStub())
+        searchViewModel = SearchViewModel(repository)
     }
 
-    @Test //Проверим вызов метода searchGitHub() у нашей ВьюМодели
-    fun search_Test() {
-        Mockito.`when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
-            Observable.just(
-                SearchResponse(
-                    1,
-                    listOf()
-                )
-            )
-        )
 
-        searchViewModel.searchGitHub(SEARCH_QUERY)
-        Mockito.verify(repository, Mockito.times(1)).searchGithub(SEARCH_QUERY)
+    @Test
+    fun coroutines_TestReturnValueIsNotNull() {
+        testCoroutineRule.runBlockingTest {
+            val observer = Observer<ScreenState> {}
+            val liveData = searchViewModel.subscribeToLiveData()
+
+            `when`(repository.searchGithubAsync(SEARCH_QUERY)).thenReturn(
+                SearchResponse(1, listOf())
+            )
+
+            try {
+                liveData.observeForever(observer)
+                searchViewModel.searchGitHub(SEARCH_QUERY)
+                Assert.assertNotNull(liveData.value)
+            } finally {
+                liveData.removeObserver(observer)
+            }
+        }
     }
 
     @Test
@@ -84,29 +94,48 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun liveData_TestReturnValueIsError() {
-        val observer = Observer<ScreenState> {}
-        val liveData = searchViewModel.subscribeToLiveData()
-        val error = Throwable(ERROR_TEXT)
+    fun coroutines_TestReturnValueIsError() {
+        testCoroutineRule.runBlockingTest {
+            val observer = Observer<ScreenState> {}
+            val liveData = searchViewModel.subscribeToLiveData()
 
-        //При вызове Репозитория возвращаем ошибку
-        Mockito.`when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
-            Observable.error(error)
-        )
+            `when`(repository.searchGithubAsync(SEARCH_QUERY)).thenReturn(
+                SearchResponse(null, listOf())
+            )
 
-        try {
-            liveData.observeForever(observer)
-            searchViewModel.searchGitHub(SEARCH_QUERY)
-            //Убеждаемся, что Репозиторий вернул ошибку и LiveData возвращает ошибку
-            val value: ScreenState.Error = liveData.value as ScreenState.Error
-            Assert.assertEquals(value.error.message, error.message)
-        } finally {
-            liveData.removeObserver(observer)
+            try {
+                liveData.observeForever(observer)
+                searchViewModel.searchGitHub(SEARCH_QUERY)
+
+                val value: ScreenState.Error = liveData.value as ScreenState.Error
+                Assert.assertEquals(value.error.message, ERROR_TEXT)
+            } finally {
+                liveData.removeObserver(observer)
+            }
+        }
+    }
+
+    @Test
+    fun coroutines_TestException() {
+        testCoroutineRule.runBlockingTest {
+            val observer = Observer<ScreenState> {}
+            val liveData = searchViewModel.subscribeToLiveData()
+
+            try {
+                liveData.observeForever(observer)
+                searchViewModel.searchGitHub(SEARCH_QUERY)
+
+                val value: ScreenState.Error = liveData.value as ScreenState.Error
+                Assert.assertEquals(value.error.message, EXCEPTION_TEXT)
+            } finally {
+                liveData.removeObserver(observer)
+            }
         }
     }
 
     companion object {
         private const val SEARCH_QUERY = "some query"
         private const val ERROR_TEXT = "error"
+        private const val EXCEPTION_TEXT = "Response is null or unsuccessful"
     }
 }
