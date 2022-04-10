@@ -7,7 +7,7 @@ import com.geekbrains.tests.view.search.ViewSearchContract
 import org.junit.Before
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import com.geekbrains.tests.stubs.SchedulerProviderStub
+import com.geekbrains.tests.presenter.search.SchedulerProviderStub
 import io.reactivex.Observable
 import org.junit.Test
 import org.mockito.Mockito

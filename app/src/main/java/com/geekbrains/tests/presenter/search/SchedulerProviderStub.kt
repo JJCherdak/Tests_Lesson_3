@@ -1,4 +1,4 @@
-package com.geekbrains.tests.stubs
+package com.geekbrains.tests.presenter.search
 
 import com.geekbrains.tests.presenter.SchedulerProvider
 import io.reactivex.Scheduler
